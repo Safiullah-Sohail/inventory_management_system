@@ -1,0 +1,40 @@
+{
+  "name": "bookee",
+  "version": "0.1.0",
+  "description": "app for pick and drop",
+  "main": "./app/index.js",
+  "license": "ISC",
+  "scripts": {
+    "build": "vue-cli-service build --mode production",
+    "lint": "vue-cli-service lint",
+    "server-start": "nodemon server.js | bunyan --output short --color",
+    "client-start": "vue-cli-service serve",
+    "dev-start": "concurrently --kill-others \"npm run server-start\" \"npm run client-start\"",
+    "win-server-start": "SET NODE_ENV=development && nodemon server.js | bunyan --output short --color",
+    "win-dev-start": "concurrently --kill-others \"npm run win-server-start\" \"npm run client-start\""
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "body-parser": "^1.20.2",
+    "bunyan": "^1.8.15",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "customize-response-appender": "^1.0.4",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "kraken-js": "^2.4.0",
+    "mongoose": "^7.4.3",
+    "morgan": "^1.10.0",
+    "moment": "^2.29.2",
+    "pluralize": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.12.16",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.1"
+  }
+}
