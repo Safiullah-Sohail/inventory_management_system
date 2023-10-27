@@ -29,13 +29,17 @@ function _addConstraintOnFK(fields) {
 }
 
 function getFields(DataTypes, fields) {
-    const { INTEGER, DATE } = DataTypes;
+    const { INTEGER, DATE, BOOLEAN } = DataTypes;
     fields = {
         id: {
             field: 'id',
             type: INTEGER,
             primaryKey: true,
             autoIncrement: true,
+        },
+        active: {
+            type: BOOLEAN,
+            field: 'active',
         },
         createdAt: {
             type: DATE,
@@ -64,6 +68,10 @@ function getDefaultFields(DataTypes, fields) {
     return {
         id: {
             ...defaultFields.id,
+        },
+        active: {
+            ...defaultFields.active,
+            defaultValue: true,
         },
         createdAt: {
             ...defaultFields.createdAt,

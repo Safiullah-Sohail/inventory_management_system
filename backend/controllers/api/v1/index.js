@@ -2,16 +2,15 @@
 const { asyncMiddleware } = global;
 const { ROLES, STATUS } = global.appEnums;
 const { getHashedPassword } = global.commonFunctions;
-const { Users, UserBooks, Books } = global.db;
-const SendMAil = require(`${global.paths.lib}/email-sender`);
+const { Users } = global.db;
+// const SendMAil = require(`${global.paths.lib}/email-sender`);
 const { sequelizeConfig } = require(`${global.paths.lib}/sequelize`);
 const { decodeAPiToken } = global.commonFunctions;
 const { Op, Sequelize } = require('sequelize');
-const user = require('./user');
+// const user = require('./user');
 const {
     newAndConfirmPasswordValidator,
 } = require(`${global.paths.middlewares}/password`);
-const BookData = require('../../../BookData.json');
 const { upperCase } = require('lodash');
 
 module.exports = (router) => {

@@ -7,7 +7,7 @@ global.paths = {};
 
 function defineNodeFoldersPathsOnGlobalObject() {
     fs.readdirSync(
-        path.resolve(`${__dirname.split('\\').pop()}`)
+        path.resolve(`${__dirname}`)
     ).filter(str => !str.includes('.')).forEach(dir => global.paths[dir] = `${global.appRoot}/${dir}`);
 }
 
@@ -16,6 +16,7 @@ defineNodeFoldersPathsOnGlobalObject();
 // Global Functions
 global.appEnums = require(`${global.appRoot}/enums`);
 global.appConstants = require(`${global.appRoot}/config/config.json`).app;
+global.appTranslations = require(`${global.appRoot}/en`);
 global.log = require(`${global.paths.lib}/logger`);
 global.asyncMiddleware = require(`${global.paths.middlewares}/response/async-middleware`);
 

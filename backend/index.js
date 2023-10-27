@@ -13,7 +13,7 @@ const morgan = require('morgan');
 
 
 const customResponseMethodAppender = require('customize-response-appender')({
-    reponsesConfigFilePath: '/app/config/responses-config.js',
+    reponsesConfigFilePath: 'config/responses-config.js',
 });
 const app = express();
 

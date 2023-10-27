@@ -10,7 +10,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = {
     username: 'root',
     password: 'root',
-    database: 'bookee',
+    database: 'ims-database',
     host: 'localhost',
     dialect: 'mysql',
     define: {
@@ -19,7 +19,6 @@ const config = {
         underscored: true,
         freezeTableName: true,
     },
-    migrationStorageTableName: 'sequelize_meta',
     logging: false,
     // logging: (message) => dbLogger.debug(message),
 };

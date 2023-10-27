@@ -9,6 +9,8 @@ module.exports.Validations = {
   },
 };
 
+module.exports.AMOUNT_CURRENCY = 'Rs.'
+
 module.exports.CRUD = {
   Created: 'created',
   Deleted: 'deleted',
