@@ -27,7 +27,6 @@
     "jsonwebtoken": "^9.0.1",
     "kraken-js": "^2.4.0",
     "moment": "^2.29.2",
-    "mongoose": "^7.4.3",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.2",
