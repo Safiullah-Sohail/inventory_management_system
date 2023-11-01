@@ -3,18 +3,18 @@
     style="border-radius: 12px"
     :class="!$vuetify.display.xs ? 'py-11 px-8' : 'py-8 px-5 mx-10'"
   >
-    <v-card-title class="text-center pb-6">
+    <v-card-title class="text-center pb-6 d-flex align-center flex-column">
       <v-img
         :src="require('../assets/Logo.png')"
         height="40"
+        width="100"
         style="margin-bottom: 30px"
       />
       <h4
-        style="font-style: normal; font-weight: 700; line-height: normal"
+        style="font-style: normal; font-weight: 700; line-height: normal; max-width: 360px;"
       >
         <span class="font-18 text-black">
-          Get started with</span> Inventory <br>
-        Management System
+          Get started with</span> {{ APP_PREFIX }}
       </h4>
       <span
         class="text-grey-lighten-1"
@@ -23,7 +23,25 @@
         Create your free account
       </span>
     </v-card-title>
-    <v-card-text class="py-0 mt-5">
+    <v-card-text class="py-0 mt-3">
+      <v-alert
+        class="mb-5"
+        type="info"
+        max-width="561"
+        variant="tonal"
+        rounded
+        border="start"
+        density="compact"
+      >Your PASSCODE must be <strong class="text-uppercase">6</strong> characters
+        long and include a <strong class="text-uppercase">lowercase</strong>,
+        an <strong class="text-uppercase">uppercase</strong>, and a
+        <strong class="text-uppercase">
+          special symbol
+        </strong>. <br><br>Please store it securely, as it <strong
+          class="text-uppercase"
+        >cannot be
+          changed.</strong>
+      </v-alert>
       <v-form
         ref="signupForm"
         v-model="validForm"
@@ -43,7 +61,7 @@
               :bg-color="colorScheme.textField"
               density="compact"
               :rules="rules.required"
-              placeholder="First Name"
+              label="First Name"
               hide-details
               :rounded="30"
               prepend-inner-icon="mdi-account-outline"
@@ -63,7 +81,7 @@
               :bg-color="colorScheme.textField"
               density="compact"
               :rules="rules.required"
-              placeholder="Last Name"
+              label="Last Name"
               hide-details
               :rounded="30"
               prepend-inner-icon="mdi-account-outline"
@@ -85,7 +103,8 @@
               :rounded="30"
               prepend-inner-icon="mdi-email-outline"
               flat
-              placeholder="Email Address"
+              placeholder="someone@gmail.com"
+              label="Email Address"
             />
           </v-col>
           <v-col
@@ -101,7 +120,7 @@
               :bg-color="colorScheme.textField"
               density="compact"
               :rules="rules.password"
-              placeholder="Password"
+              label="Password"
               hide-details
               :rounded="30"
               :type="showPassword ? 'text' : 'password'"
@@ -124,7 +143,7 @@
               :bg-color="colorScheme.textField"
               density="compact"
               :rules="rules.passcode"
-              placeholder="Passcode"
+              label="Passcode"
               hide-details
               :rounded="30"
               :type="showPasscode ? 'text' : 'password'"
@@ -168,26 +187,29 @@
 </template>
 
 <script>
+import { ValidationRegex } from '../enums';
+
 export default {
   name: 'LoginPage',
   components: {
   },
   data: () => ({
+    ValidationRegex,
     validForm: false,
     errorMessage: '',
     userPayload: {
-      firstName: 'Jawad',
-      lastName: 'Haider',
-      email: 'jhaider869@gmail.com',
-      password: '12345678s',
-      passcode: '0987',
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      passcode: '',
     },
     showPassword: false,
     showPasscode: false,
     rules: {
       email: [
         (v) => !!v || 'E-mail is required',
-        (v) => /.+@.+/.test(v) || 'E-mail must be valid',
+        (v) => ValidationRegex.email.test(v) || 'E-mail must be valid',
       ],
       password: [
         (v) => !!v || 'Password is required',
@@ -197,8 +219,8 @@ export default {
       ],
       passcode: [
         (v) => !!v || 'Passcode is required',
-        (v) => /^\d+$/.test(v) || 'Passcode must only contain digits',
-        (v) => v.length >= 6 || 'Passcode must contain atleast 6 digits',
+        (v) => v.length >= 6 || 'Passcode must be greater than or equal to 6 characters',
+        (v) => ValidationRegex.passcode.test(v) || 'Passcode must contain a Lowercase, Uppercase, and Special Symbol!',
       ],
       required: [(v) => !!v || 'All Fields are required*'],
     },
@@ -212,10 +234,18 @@ export default {
           this.errorMessage = errors[0].errorMessages[0];
 
           if (this.errorMessage.includes('required')) {
-            this.$toast.error(`Field (${errors[0].id}) is required!`);
+            this.$toast.error(`${errors[0].id} is required!`);
             return;
           }
-          this.$toast.error(`${this.errorMessage}`);
+          if (!/[a-z]/.test(this.userPayload.passcode)) {
+            this.$toast.error('Passcode does not contain any LOWERCASE character!');
+          } else if (!/[A-Z]/.test(this.userPayload.passcode)) {
+            this.$toast.error('Passcode does not contain any UPPERCASE character!');
+          } else if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(this.userPayload.passcode)) {
+            this.$toast.error('Passcode does not contain any SPECIAL SYMBOL!');
+          } else {
+            this.$toast.error(`${this.errorMessage}`);
+          }
         }
       })
       if (!this.validForm) return;
@@ -231,7 +261,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .v-field__prepend-inner {
   i {
     color: #6a6a6b;

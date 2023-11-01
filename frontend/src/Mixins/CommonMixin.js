@@ -1,5 +1,5 @@
 import { startCase } from 'lodash';
-const APP_PREFIX = 'Inventory Management System';
+import { APP_PREFIX } from '@/enums';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 

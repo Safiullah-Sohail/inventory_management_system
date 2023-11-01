@@ -1,10 +1,7 @@
 <template>
   <v-app class="App">
     <application-bar />
-    <v-main
-      class="main-container d-flex justify-center align-center"
-      :style="$vuetify.display.xs ? '' : 'height: 100vh !important;'"
-    >
+    <v-main class="main-container d-flex justify-center align-center">
       <router-view />
     </v-main>
   </v-app>
@@ -26,7 +23,7 @@ export default {
 <style lang="scss">
 .main-container {
   background-color: #E5E5E5;
-  padding: 65px 0 48px 0 !important;
+  padding: 90px 0 48px 0 !important;
 
   .v-main__wrap {
     height: calc(100vh - 65px);
@@ -183,5 +180,6 @@ $light-mode-autofill-text-color: rgba(0, 0, 0, 0.87);
   input:-webkit-autofill {
     -webkit-text-fill-color: $light-mode-autofill-text-color !important;
   }
-}</style>
+}
+</style>
 

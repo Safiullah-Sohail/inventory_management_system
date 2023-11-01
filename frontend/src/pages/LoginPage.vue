@@ -9,9 +9,7 @@
         height="40"
         style="margin-bottom: 30px"
       />
-      <h4
-        style="font-style: normal; font-weight: 700; line-height: normal"
-      >
+      <h4 style="font-style: normal; font-weight: 700; line-height: normal">
         Welcome Back!
       </h4>
       <span
@@ -41,7 +39,8 @@
               prepend-inner-icon="mdi-email-outline"
               flat
               id="Email Address"
-              placeholder="Email Address"
+              placeholder="someone@gmail.com"
+              label="Email Address"
             />
           </v-col>
           <v-col cols="12">
@@ -51,9 +50,7 @@
               :bg-color="colorScheme.textField"
               density="compact"
               :rules="rules.password"
-              counter="8"
               id="Password"
-              placeholder="Password"
               hide-details
               :rounded="30"
               :type="showPassword ? 'text' : 'password'"
@@ -61,6 +58,7 @@
               :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
               flat
               @click:append-inner="showPassword = !showPassword"
+              label="Password"
             />
           </v-col>
         </v-row>
@@ -131,7 +129,7 @@ export default {
           this.errorMessage = errors[0].errorMessages[0];
 
           if (this.errorMessage.includes('required')) {
-            this.$toast.error(`Field (${errors[0].id}) is required!`);
+            this.$toast.error(`${errors[0].id} is required!`);
             return;
           }
           this.$toast.error(`${this.errorMessage}`);

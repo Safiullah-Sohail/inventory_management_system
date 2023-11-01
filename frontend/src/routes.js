@@ -1,3 +1,4 @@
+import { APP_PREFIX } from './enums';
 import LoginPage from './pages/LoginPage.vue';
 import SignupPage from './pages/SignupPage.vue';
 import LayoutPage from './pages/LayoutPage.vue';
@@ -31,7 +32,7 @@ export default [
         component: LayoutPage,
         name: 'index',
         meta: {
-            pageTitle: 'Inventory Management System',
+            pageTitle: APP_PREFIX,
         },
         children: [
             {
