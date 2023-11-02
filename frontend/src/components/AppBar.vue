@@ -144,7 +144,7 @@
             selectedImage: 'Order&SalesSelected.png',
             title: 'Sales and Orders',
             value: 'salesAndOrders',
-            href: '/salesAndOrders',
+            href: '/sales-and-orders',
             isSelected: false,
           },
           {
@@ -184,9 +184,24 @@
     },
     watch: {
       selectedTabs(newValue, oldValue) {
+        console.log('Outer', newValue, oldValue);
         if (newValue[0] !== oldValue[0]) {
-          this.sidebarTabs[newValue[0]].isSelected = true;
+          const tab = this.sidebarTabs[newValue[0]];
+          tab.isSelected = true;
           this.sidebarTabs[oldValue[0]].isSelected = false;
+
+          console.log(newValue, 'newValue');
+          console.log(oldValue, 'oldValue');
+
+          if (tab.href) {
+            this.$router.push(tab.href);
+          }
+          // Only Logout Tab is only tab without any href value
+          else {
+            this.selectedTabs = oldValue;
+            console.log(this.selectedTabs, 'else');
+            this.onLogoutTabClick();
+          }
         }
       },
     },
@@ -211,6 +226,11 @@
             })),
         ];
         return list;
+      },
+    },
+    methods: {
+      onLogoutTabClick() {
+        this.$toast.info('Logout not implemented yet!');
       },
     },
   };
