@@ -29,6 +29,9 @@ export default {
             colorScheme: {
                 primary: '#5570F1',
                 textField: '#f6f7fb',
+                error: '#CC5F5F',
+                darkGray: '#45464E',
+                lightGray: '#dbdbde',
             },
         };
     },
@@ -42,6 +45,7 @@ export default {
         }
     },
     methods: {
+        getTitle,
     },
     created() {
         const title = getTitle(this);

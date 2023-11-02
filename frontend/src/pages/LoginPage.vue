@@ -136,11 +136,13 @@ export default {
         }
       })
 
+      localStorage.setItem('token', { email: this.email, password: this.password });
+
       // await this.login({
       //   email: this.email,
       //   password: this.password,
       // });
-      // this.$router.push('/dashboard');
+      this.$router.push('/dashboard');
     },
   },
 };
