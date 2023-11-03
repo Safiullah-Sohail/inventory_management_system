@@ -9,7 +9,7 @@ module.exports.Validations = {
   },
 };
 
-module.exports.AMOUNT_CURRENCY = 'Rs.'
+module.exports.CURRENCY_SYMBOL = 'Rs.'
 
 module.exports.CRUD = {
   Created: 'created',

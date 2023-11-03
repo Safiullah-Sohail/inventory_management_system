@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container ref="nav-bar" fluid class="px-16">
+    <v-container ref="nav-bar" fluid style="padding-left: calc(64px);">
       <router-view />
     </v-container>
   </div>

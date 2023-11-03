@@ -66,7 +66,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar class="app-bar" height="88">
+    <v-app-bar class="app-bar" height="88" elevation="3">
       <div class="d-block w-100">
         <div class="d-flex px-5 pb-2" style="align-items: center">
           <h4 :style="{ color: colorScheme.darkGray }">

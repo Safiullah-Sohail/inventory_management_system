@@ -1,7 +1,7 @@
 <template>
   <v-app class="App">
     <application-bar />
-    <v-main class="main-container d-flex justify-center align-center">
+    <v-main class="main-container">
       <router-view />
     </v-main>
   </v-app>

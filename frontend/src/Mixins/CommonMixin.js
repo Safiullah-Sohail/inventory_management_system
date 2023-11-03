@@ -31,6 +31,7 @@ export default {
                 textField: '#f6f7fb',
                 error: '#CC5F5F',
                 darkGray: '#45464E',
+                lightGrayText: '#8B8D97',
                 lightGray: '#dbdbde',
             },
         };
