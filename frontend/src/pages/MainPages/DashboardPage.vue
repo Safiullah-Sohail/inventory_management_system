@@ -285,7 +285,7 @@
             </span>
           </v-col>
           <v-col cols="12">
-            <!-- Here comes the Pie-Chart -->
+            <Doughnut :data="data" :options="options" />
           </v-col>
         </v-row>
       </custom-card>
@@ -451,7 +451,7 @@
       </custom-card>
     </v-col>
     <!-- Second row cards END -->
-    
+
     <v-col cols="8">
       <custom-card>
         <v-row>
@@ -468,7 +468,7 @@
                   :color="colorScheme.primary"
                   append-icon="mdi-arrow-down"
                   class="px-1"
-                  style="width: 50%; border-radius: 8px;"
+                  style="width: 50%; border-radius: 8px"
                   v-bind="props"
                 >
                   {{ ordersFilterDay || 'Iphone 13' }}
@@ -526,7 +526,7 @@
             </v-menu>
           </v-col>
           <v-col cols="12">
-            <!-- Here comes the Bar-Chart -->
+            <Bar :data="barChartData" :options="options" />
           </v-col>
         </v-row>
       </custom-card>
@@ -542,6 +542,29 @@
   import Inventory from '@/shared/icons/Inventory.vue';
   import Cart from '@/shared/icons/Cart.vue';
 
+  import {
+    Chart as ChartJS,
+    ArcElement,
+    Tooltip,
+    Legend,
+    Title,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    ChartData,
+  } from 'chart.js';
+  import { Doughnut, Bar } from 'vue-chartjs';
+
+  ChartJS.register(ArcElement, Tooltip, Legend);
+  ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+  );
+
   export default {
     name: 'DashBoardPage',
     components: {
@@ -550,6 +573,8 @@
       SalesAndOrder,
       Inventory,
       Cart,
+      Doughnut,
+      Bar,
     },
     data() {
       return {
@@ -570,6 +595,46 @@
             status: 'Completed',
           },
         ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+        data: {
+          datasets: [
+            {
+              backgroundColor: ['#5570F1', '#97A5EB', '#FFCC91'],
+              data: [35, 25, 80],
+            },
+          ],
+        },
+        barChartData: {
+          labels: [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+          ],
+          datasets: [
+            {
+              label: 'Iphone 13',
+              backgroundColor: '#97A5EB',
+              data: [
+                10,
+                20,
+                25,
+                14,
+                30,
+                24,
+                12,
+                40,
+              ],
+            },
+          ],
+        },
       };
     },
   };
