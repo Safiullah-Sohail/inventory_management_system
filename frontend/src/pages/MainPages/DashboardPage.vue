@@ -285,7 +285,7 @@
             </span>
           </v-col>
           <v-col cols="12">
-            <Doughnut :data="data" :options="options" />
+            <Doughnut :data="data.datasets[0].data.length > 0 ? data : emptyData" :options="options" />
           </v-col>
         </v-row>
       </custom-card>
@@ -295,11 +295,22 @@
       md="4"
       sm="4"
       class="d-flex flex-column"
-      style="gap: 0.1em"
+      style="gap: 2.1em"
     >
-      <div>
+      <div style="flex: 1">
         <custom-card
-          :style="{ 'background-color': colorScheme.primary }"
+          :cardTextProps="{
+            style: {
+              display: 'flex',
+              'flex-direction': 'column',
+              'justify-content': 'space-between',
+              height: '100%',
+            },
+          }"
+          :style="{
+            'background-color': colorScheme.primary,
+            height: '100%',
+          }"
         >
           <v-row>
             <v-col cols="2">
@@ -333,8 +344,18 @@
           </v-row>
         </custom-card>
       </div>
-      <div>
-        <custom-card>
+      <div style="flex: 1">
+        <custom-card
+          style="height: 100%"
+          :cardTextProps="{
+            style: {
+              display: 'flex',
+              'flex-direction': 'column',
+              'justify-content': 'space-between',
+              height: '100%',
+            },
+          }"
+        >
           <v-row>
             <v-col cols="2">
               <div
@@ -402,7 +423,7 @@
       </div>
     </v-col>
     <v-col cols="12" md="4" sm="4">
-      <custom-card>
+      <custom-card style="height: 100%">
         <v-row>
           <v-col cols="12">
             <span style="font-size: 16px; font-weight: 600">
@@ -415,19 +436,44 @@
             :key="index"
           >
             <v-row class="align-center">
-              <v-col cols="2">
+              <v-col
+                cols="2"
+                md="2"
+                sm="2"
+                :class="$vuetify.display.smAndDown ? 'pa-0' : ''"
+              >
                 <v-img
                   :src="require('@/assets/Logo.png')"
                   height="30"
                 />
               </v-col>
-              <v-col cols="6" class="d-flex flex-column">
+              <v-col
+                cols="10"
+                md="6"
+                sm="10"
+                class="d-flex flex-column"
+                :class="$vuetify.display.smAndDown ? 'pb-0' : ''"
+              >
                 <span>{{ item.name }}</span>
-                <span class="mt-2" style="font-weight: 700">
+                <span
+                  :class="$vuetify.display.smAndDown ? '' : 'mt-2'"
+                  style="font-weight: 700"
+                >
                   {{ `${CURRENCY_SYMBOL} ${item.price}` }}
                 </span>
               </v-col>
-              <v-col cols="4" class="d-flex flex-column align-end">
+              <v-col
+                cols="12"
+                md="4"
+                sm="12"
+                class="d-flex align-end"
+                :class="
+                  $vuetify.display.smAndDown
+                    ? 'flex-row pt-0 justify-end mt-2'
+                    : 'flex-column'
+                "
+                :style="$vuetify.display.sm ? 'gap: 0.2em' : ''"
+              >
                 <span class="text-grey-darken-1 font-12">
                   {{ item.date }}
                 </span>
@@ -445,6 +491,13 @@
                   {{ item.status }}
                 </v-chip>
               </v-col>
+              <v-col
+                cols="12"
+                class="py-1"
+                v-if="index + 1 !== fastMovingItems.length"
+              >
+                <v-divider />
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -452,23 +505,28 @@
     </v-col>
     <!-- Second row cards END -->
 
-    <v-col cols="8">
+    <v-col cols="12">
       <custom-card>
         <v-row>
-          <v-col cols="4">
+          <v-col cols="12" md="4" sm="4">
             <span style="font-size: 16px; font-weight: 600">
-              Products Price Changes
+              {{ 'Products Price Changes' }}
             </span>
           </v-col>
-          <v-col cols="4" class="pt-2">
+          <v-col cols="6" md="4" sm="4" class="pt-2">
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-chip
                   variant="tonal"
                   :color="colorScheme.primary"
-                  append-icon="mdi-arrow-down"
+                  :append-icon="$vuetify.display.xs? '' : 'mdi-arrow-down'"
                   class="px-1"
-                  style="width: 50%; border-radius: 8px"
+                  style="border-radius: 8px"
+                  :style="
+                    $vuetify.display.xs
+                      ? { width: '100%' }
+                      : { width: '50%' }
+                  "
                   v-bind="props"
                 >
                   {{ ordersFilterDay || 'Iphone 13' }}
@@ -491,7 +549,9 @@
             </v-menu>
           </v-col>
           <v-col
-            cols="4"
+            cols="6"
+            md="4"
+            sm="4"
             class="d-flex justify-end"
             :class="$vuetify.display.xs ? 'pr-0' : ''"
           >
@@ -562,7 +622,7 @@
     Legend,
     BarElement,
     CategoryScale,
-    LinearScale
+    LinearScale,
   );
 
   export default {
@@ -599,11 +659,20 @@
           responsive: true,
           maintainAspectRatio: false,
         },
+        emptyData: {
+          datasets: [
+            {
+              label: 'Empty',
+              backgroundColor: ['#EEF0FA'],
+              data: [10],
+            },
+          ],
+        },
         data: {
           datasets: [
             {
               backgroundColor: ['#5570F1', '#97A5EB', '#FFCC91'],
-              data: [35, 25, 80],
+              data: [80, 30, 45],
             },
           ],
         },
@@ -622,16 +691,7 @@
             {
               label: 'Iphone 13',
               backgroundColor: '#97A5EB',
-              data: [
-                10,
-                20,
-                25,
-                14,
-                30,
-                24,
-                12,
-                40,
-              ],
+              data: [10, 20, 25, 14, 30, 24, 12, 40],
             },
           ],
         },

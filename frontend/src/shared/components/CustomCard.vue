@@ -7,7 +7,7 @@
     >
       <slot name="card-title"></slot>
     </v-card-title>
-    <v-card-text class="pa-2">
+    <v-card-text class="pa-2" v-bind="cardTextProps">
       <slot>
         <!-- Display a message when there is no content -->
         <div v-if="!$slots.default">This is custom card</div>
@@ -21,6 +21,10 @@
     name: 'CustomCard',
     props: {
       cardTitleProps: {
+        type: Object,
+        default: {},
+      },
+      cardTextProps: {
         type: Object,
         default: {},
       },
