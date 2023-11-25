@@ -28,7 +28,11 @@ export default {
             APP_PREFIX,
             colorScheme: {
                 primary: '#5570F1',
-                textField: '#f6f7fb',
+                primary30: '#6a81eb',
+                // textField: '#f6f7fb',
+                textField: '#e5e5e5',
+                primaryText: '#53545C',
+                secondaryText: '#2C2D33',
                 error: '#CC5F5F',
                 darkGray: '#45464E',
                 lightGrayText: '#8B8D97',
@@ -40,6 +44,7 @@ export default {
         $toast() {
             return {
                 success: toast.success,
+                warning: toast.warning,
                 error: toast.error,
                 info: toast.info,
             };
@@ -47,6 +52,23 @@ export default {
     },
     methods: {
         getTitle,
+        async formValidationChecker(formRef) {
+            let isValid = true;
+            await formRef?.validate().then(response => {
+                const errors = response.errors;
+                isValid = response.valid;
+                if (errors.length) {
+                    this.errorMessage = errors[0].errorMessages[0];
+
+                    if (this.errorMessage.includes('required')) {
+                        this.$toast.error(`${errors[0].id} is required!`);
+                        return;
+                    }
+                    this.$toast.error(`${this.errorMessage}`);
+                }
+            })
+            return isValid;
+        },
     },
     created() {
         const title = getTitle(this);

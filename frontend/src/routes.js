@@ -3,7 +3,7 @@ import LoginPage from './pages/LoginPage.vue';
 import SignupPage from './pages/SignupPage.vue';
 import LayoutPage from './pages/LayoutPage.vue';
 import DashBoardPage from './pages/MainPages/DashboardPage.vue';
-import SalesAndOrderPage from './pages/MainPages/SalesAndOrderPage.vue';
+import OutgoingOrders from './pages/MainPages/OutgoingOrders.vue';
 import SuppliersPage from './pages/MainPages/SuppliersPage.vue';
 import InventoryPage from './pages/MainPages/InventoryPage.vue';
 import SettingsPage from './pages/MainPages/SettingsPage.vue';
@@ -48,11 +48,11 @@ export default [
                 },
             },
             {
-                path: 'sales-and-orders',
-                component: SalesAndOrderPage,
-                name: 'salesAndOrders',
+                path: 'outgoing-orders',
+                component: OutgoingOrders,
+                name: 'outgoingOrders',
                 meta: {
-                    pageTitle: 'Sales and Orders'
+                    pageTitle: 'Outgoing Orders'
                 },
             },
             {

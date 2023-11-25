@@ -142,9 +142,9 @@
           {
             iconImage: 'Order&Sales.png',
             selectedImage: 'Order&SalesSelected.png',
-            title: 'Sales and Orders',
-            value: 'salesAndOrders',
-            href: '/sales-and-orders',
+            title: 'Outgoing Orders',
+            value: 'outgoingOrders',
+            href: '/outgoing-orders',
             isSelected: false,
           },
           {
