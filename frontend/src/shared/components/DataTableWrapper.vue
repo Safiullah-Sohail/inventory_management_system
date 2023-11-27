@@ -142,8 +142,8 @@
                   color="red"
                   style="border-radius: 8px"
                   @click="
-                    toggleViewOrders = true;
                     selectedOrder = item;
+                    toggleConfirmationModal = true;
                   "
                 />
               </div>
@@ -180,6 +180,23 @@
         selectedOrder = {};
       "
     />
+
+    <confirmation-modal
+      :open="toggleConfirmationModal"
+      :message="`Confirm you want delete order: (${selectedOrder.id})`"
+      @close="toggleConfirmationModal = false"
+      @confirm="toggleConfirmationModal = false;"
+    >
+      <template v-slot:default>
+        <span class="text-gray-darken-4" style="font-size: 16px">
+          {{ 'Do you want to delete order:' }}
+        </span>
+        <strong
+          :style="{ color: colorScheme.primary, fontSize: '16px' }"
+          >{{ ` (${selectedOrder.id})` }}</strong
+        >
+      </template>
+    </confirmation-modal>
   </v-row>
 </template>
 
@@ -187,12 +204,14 @@
   import { CURRENCY_SYMBOL } from '@/enums';
   import ViewOrdersModal from '@/components/orders-components/ViewOrdersModal.vue';
   import EditCreateOrderModal from '@/components/orders-components/EditCreateOrderModal.vue';
+  import ConfirmationModal from '@/shared/components/ConfirmationModal.vue';
 
   export default {
     name: 'CustomDataTable',
     components: {
       ViewOrdersModal,
       EditCreateOrderModal,
+      ConfirmationModal,
     },
     props: {
       title: {
@@ -220,14 +239,16 @@
         allItemsSelected: false,
         toggleViewOrders: false,
         openEditCreateOrderModal: false,
+        toggleConfirmationModal: false,
         selectedOrder: {},
+        dataTableItems: [],
       };
     },
     computed: {
       filteredItems() {
         if (this.searchText) {
           const textValue = this.searchText.toLowerCase();
-          const filteredObj = this.items.filter((item) => {
+          const filteredObj = this.dataTableItems.filter((item) => {
             let isFound = false;
             this.searchFields.forEach((field) => {
               if (item[field].toLowerCase().indexOf(textValue) > -1) {
@@ -242,15 +263,18 @@
           return list;
         }
 
-        return this.items;
+        return this.dataTableItems;
       },
     },
     methods: {
       selectAllItems() {
-        this.items.forEach((item) => {
+        this.dataTableItems.forEach((item) => {
           item.isSelected = !this.allItemsSelected;
         });
       },
+    },
+    mounted() {
+      this.dataTableItems = this.items;
     },
   };
 </script>
