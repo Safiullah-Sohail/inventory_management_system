@@ -1,6 +1,7 @@
 <template>
   <v-card
-    style="border-radius: 12px"
+    style="border-radius: 12px; margin: auto;"
+    width="650"
     :class="!$vuetify.display.xs ? 'py-11 px-8' : 'py-8 px-5 mx-10'"
   >
     <v-card-title class="text-center pb-6 d-flex align-center flex-column">
@@ -188,6 +189,7 @@
 
 <script>
 import { ValidationRegex } from '../enums';
+import {mapActions} from 'vuex';
 
 export default {
   name: 'LoginPage',
@@ -226,7 +228,7 @@ export default {
     },
   }),
   methods: {
-    // ...mapActions('global', ['login']),
+    ...mapActions('global', ['signUp']),
     async onSignUp() {
       this.$refs.signupForm?.validate().then(response => {
         const errors = response.errors
@@ -249,12 +251,17 @@ export default {
         }
       })
       if (!this.validForm) return;
-      // await this.login({
-      //   email: this.email,
-      //   password: this.password,
-      // });
-      // this.$router.push('/dashboard');
-      this.$toast.info('API integration not done yet!')
+      
+      try {
+        await this.signUp(this.userPayload);
+        this.$router.push({name: 'dashboard'});
+        this.$toast.success('User Login Successfully!')
+      } catch (err) {
+        const message = err.response?.data?.error?.error || err.response?.data?.error;
+        if (message) {
+          this.$toast.error(message);
+        }
+      }
     },
   },
 };

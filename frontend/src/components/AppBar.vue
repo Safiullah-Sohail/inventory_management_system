@@ -122,12 +122,24 @@
         </div>
       </div>
     </v-app-bar>
+
+    <confirmation-modal
+      :open="toggleConfirmationModal"
+      @confirm="onLogoutTabClick"
+      @close="toggleConfirmationModal = false"
+    >
+      <span>Are you sure you want to Logout?</span>
+    </confirmation-modal>
   </div>
 </template>
 
 <script>
+  import ConfirmationModal from '@/shared/components/ConfirmationModal.vue';
   export default {
     name: 'AppBar',
+    components: {
+      ConfirmationModal,
+    },
     data() {
       return {
         sidebarTabs: [
@@ -180,18 +192,15 @@
         ],
         selectedTabs: [0],
         navigationDrawerClosed: true,
+        toggleConfirmationModal: false,
       };
     },
     watch: {
       selectedTabs(newValue, oldValue) {
-        console.log('Outer', newValue, oldValue);
         if (newValue[0] !== oldValue[0]) {
           const tab = this.sidebarTabs[newValue[0]];
           tab.isSelected = true;
           this.sidebarTabs[oldValue[0]].isSelected = false;
-
-          console.log(newValue, 'newValue');
-          console.log(oldValue, 'oldValue');
 
           if (tab.href) {
             this.$router.push(tab.href);
@@ -199,8 +208,7 @@
           // Only Logout Tab is only tab without any href value
           else {
             this.selectedTabs = oldValue;
-            console.log(this.selectedTabs, 'else');
-            this.onLogoutTabClick();
+            this.toggleConfirmationModal = true;
           }
         }
       },
@@ -230,7 +238,10 @@
     },
     methods: {
       onLogoutTabClick() {
-        this.$toast.info('Logout not implemented yet!');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        this.$router.push({ name: 'login' });
+        this.$toast.success('Logout Successfully!!');
       },
     },
   };

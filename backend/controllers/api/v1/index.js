@@ -33,6 +33,12 @@ module.exports = (router) => {
     router.post(
         '/signup',
         asyncMiddleware(async (req, res) => {
+            const existingUser = await Users.findOne({});
+            if (existingUser) {
+                return res.http500({
+                    error: 'Only one user can be created in the application!',
+                });
+            }
             const user = await Users.create({ ...req.body, role: ROLES.reader });
             res.http200({ token: user.createToken(), user });
         })

@@ -40,6 +40,7 @@ function getFields(DataTypes, fields) {
         active: {
             type: BOOLEAN,
             field: 'active',
+            defaultValue: true,
         },
         createdAt: {
             type: DATE,
