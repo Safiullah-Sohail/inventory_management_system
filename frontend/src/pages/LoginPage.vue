@@ -1,6 +1,7 @@
 <template>
   <v-card
-    style="border-radius: 12px"
+    style="border-radius: 12px; margin: auto"
+    width="370"
     :class="!$vuetify.display.xs ? 'py-11 px-8' : 'py-8 px-5 mx-8'"
   >
     <v-card-title class="text-center pb-6">
@@ -9,7 +10,13 @@
         height="40"
         style="margin-bottom: 30px"
       />
-      <h4 style="font-style: normal; font-weight: 700; line-height: normal">
+      <h4
+        style="
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+        "
+      >
         Welcome Back!
       </h4>
       <span
@@ -55,7 +62,11 @@
               :rounded="30"
               :type="showPassword ? 'text' : 'password'"
               prepend-inner-icon="mdi-lock-outline"
-              :append-inner-icon="showPassword ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+              :append-inner-icon="
+                showPassword
+                  ? 'mdi-eye-outline'
+                  : 'mdi-eye-off-outline'
+              "
               flat
               @click:append-inner="showPassword = !showPassword"
               label="Password"
@@ -63,19 +74,17 @@
           </v-col>
         </v-row>
       </v-form>
-      <a
-        href=""
-        class="text-decoration-none float-right text-main"
-      >
+      <a href="" class="text-decoration-none float-right text-main">
         Recover Password
       </a>
-      <br>
+      <br />
       <div class="text-center text-grey-lighten-1 my-10">
         Don't have an account?
         <router-link
           to="/sign-up"
           class="text-decoration-none text-main"
-        >Sign Up</router-link>
+          >Sign Up</router-link
+        >
       </div>
     </v-card-text>
     <v-card-actions class="pt-0 justify-center">
@@ -83,7 +92,7 @@
         class="py-6 d-flex align-center"
         variant="flat"
         width="140px"
-        style="border-radius: 12px;"
+        style="border-radius: 12px"
         :color="colorScheme.primary"
         @click="onLogin"
       >
@@ -94,70 +103,74 @@
 </template>
 
 <script>
-import LoginSignupAppBar from '../components/LoginSignupAppBar.vue';
+  import { mapActions } from 'vuex';
+  import LoginSignupAppBar from '../components/LoginSignupAppBar.vue';
 
-export default {
-  name: 'LoginPage',
-  components: {
-    LoginSignupAppBar,
-  },
-  data: () => ({
-    validForm: false,
-    email: '',
-    password: '',
-    showPassword: false,
-    rules: {
-      email: [
-        (v) => !!v || 'E-mail is required',
-        (v) => /.+@.+/.test(v) || 'E-mail must be valid',
-      ],
-      password: [
-        (v) => !!v || 'Password is required',
-        (v) =>
-          v.length >= 8 ||
-          'Password must be greater than or equal to 8 characters',
-      ],
+  export default {
+    name: 'LoginPage',
+    components: {
+      LoginSignupAppBar,
     },
-  }),
-  methods: {
-    // ...mapActions('global', ['login']),
-    async onLogin() {
+    data: () => ({
+      validForm: false,
+      email: '',
+      password: '',
+      showPassword: false,
+      rules: {
+        email: [
+          (v) => !!v || 'E-mail is required',
+          (v) => /.+@.+/.test(v) || 'E-mail must be valid',
+        ],
+        password: [
+          (v) => !!v || 'Password is required',
+          (v) =>
+            v.length >= 8 ||
+            'Password must be greater than or equal to 8 characters',
+        ],
+      },
+    }),
+    methods: {
+      ...mapActions('global', ['login']),
+      async onLogin() {
+        this.$refs.loginForm?.validate().then((response) => {
+          const errors = response.errors;
+          if (errors.length) {
+            this.errorMessage = errors[0].errorMessages[0];
 
-      this.$refs.loginForm?.validate().then(response => {
-        const errors = response.errors
-        if (errors.length) {
-          this.errorMessage = errors[0].errorMessages[0];
-
-          if (this.errorMessage.includes('required')) {
-            this.$toast.error(`${errors[0].id} is required!`);
-            return;
+            if (this.errorMessage.includes('required')) {
+              this.$toast.error(`${errors[0].id} is required!`);
+              return;
+            }
+            this.$toast.error(`${this.errorMessage}`);
           }
-          this.$toast.error(`${this.errorMessage}`);
+        });
+
+        try {
+          await this.login({
+            email: this.email,
+            password: this.password,
+          });
+          this.$toast.success('Login Successfully!!');
+          this.$router.push({ name: 'dashboard' });
+        } catch (err) {
+          if (err.response?.data?.error)
+            this.$toast.error(err.response?.data?.error);
         }
-      })
-
-      localStorage.setItem('token', { email: this.email, password: this.password });
-
-      // await this.login({
-      //   email: this.email,
-      //   password: this.password,
-      // });
-      this.$router.push('/dashboard');
+      },
     },
-  },
-};
+  };
 </script>
 
 <style lang="scss">
-.v-field__prepend-inner {
-  i {
-    color: #6a6a6b;
+  .v-field__prepend-inner {
+    i {
+      color: #6a6a6b;
+    }
   }
-}
 
-.v-field__append-inner {
-  i {
-    color: #6a6a6b;
+  .v-field__append-inner {
+    i {
+      color: #6a6a6b;
+    }
   }
-}
 </style>

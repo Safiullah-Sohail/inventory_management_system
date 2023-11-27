@@ -12,6 +12,10 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import CommonMixin from './Mixins/CommonMixin';
 
+import store from './store';
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:9000/api/v1'
+
 const app = createApp(App, {
     components,
     directives,
@@ -35,6 +39,7 @@ router.beforeEach((to, from, next) => {
 });
 
 
+app.use(store);
 app.use(router);
 app.use(vuetify);
 app.mixin(CommonMixin);

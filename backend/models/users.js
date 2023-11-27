@@ -47,7 +47,7 @@ module.exports = function (sequelize, DataTypes) {
                 },
             },
             passcode: {
-                type: INTEGER,
+                type: STRING,
                 allowNull: false,
                 $privateKey: true,
                 set: function (value) {

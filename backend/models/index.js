@@ -36,7 +36,7 @@ Sequelize.prototype.$$defineModel = function (
             active: 'active',
             createdAt: 'createdAt',
             updatedAt: 'updatedAt',
-            ...(config.paranoid ? { deletedAt: 'deletedAt', active: 'active' } : {}),
+            ...(config.paranoid ? { deletedAt: 'deletedAt' } : {}),
             ...config,
         }
     );
