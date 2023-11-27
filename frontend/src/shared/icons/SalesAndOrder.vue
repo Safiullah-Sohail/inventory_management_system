@@ -1,8 +1,8 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="21"
-    height="22"
+    :width="width"
+    :height="height"
     viewBox="0 0 21 22"
     fill="none"
   >
@@ -38,3 +38,19 @@
     />
   </svg>
 </template>
+
+<script>
+export default {
+  name: 'SalesAndOrder',
+  props: {
+    width: {
+      type: Number,
+      default: 21,
+    },
+    height: {
+      type: Number,
+      default: 22,
+    },
+  },
+}
+</script>

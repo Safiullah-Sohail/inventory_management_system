@@ -7,21 +7,13 @@ const { ROLES } = global.appEnums;
 module.exports = function (sequelize, DataTypes) {
     const { INTEGER, DATE, DECIMAL, BOOLEAN } = DataTypes;
     let _models = {};
-    const OutgoingItems = sequelize.$$defineModel(
-        'OutgoingItems',
+    const Orders = sequelize.$$defineModel(
+        'Orders',
         {
-            itemId: {
-                type: INTEGER,
-                references: {
-                    model: 'items',
-                    key: 'id',
-                },
-            },
-            quantity: {
-                type: DECIMAL,
+            orderDate: {
+                type: DATE,
                 allowNull: false,
             },
-            /* ================== Virtual Keys ================== */
         },
         {
             validate: {},
@@ -29,15 +21,15 @@ module.exports = function (sequelize, DataTypes) {
     );
 
     /* ================== Model Associations ================== */
-    OutgoingItems.associate = (models) => {
+    Orders.associate = (models) => {
         _models = models;
-        OutgoingItems.belongsTo(models.Orders, {
-            foreignKey: 'orderId',
-            as: models.Orders.$$name,
+        Orders.hasMany(models.OutgoingItems, {
+            foreignKey: 'outgoingItemsId',
+            as: models.OutgoingItems.$$name,
         });
     };
 
     /* ================== Instance Methods ================== */
-    
-    return OutgoingItems;
+
+    return Orders;
 };
