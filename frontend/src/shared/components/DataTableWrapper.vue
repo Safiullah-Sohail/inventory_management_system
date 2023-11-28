@@ -12,6 +12,7 @@
       <div
         class="ml-auto d-flex align-center"
         style="gap: 0.3rem; width: 40%"
+        :style="filtersWrapperStyle"
       >
         <v-text-field
           v-model="searchText"
@@ -28,6 +29,7 @@
           label="Search"
         />
         <v-btn
+          v-if="filterConfig.type === 'date'"
           height="35"
           :color="colorScheme.primaryText"
           variant="outlined"
@@ -35,6 +37,23 @@
           prepend-icon="mdi-calendar"
         >
         </v-btn>
+        <v-select
+          v-else-if="filterConfig.type === 'selectable'"
+          clearable
+          flat
+          chip
+          open-on-clear
+          :rounded="30"
+          label="Select Category"
+          class="category-filter"
+          prepend-inner-icon="mdi-tag-outline"
+          placeholder="Select Category"
+          single-line
+          variant="outlined"
+          density="compact"
+          hide-details
+          :items="['Food', 'Drink', 'Beverages']"
+        />
         <v-btn
           height="35"
           :color="colorScheme.primaryText"
@@ -101,7 +120,7 @@
         </template>
         <template v-slot:item="{ item }">
           <tr class="text-center">
-            <td style="width: 100px">
+            <td style="width: 70px">
               <v-checkbox
                 v-model="item.isSelected"
                 :model-value="item.isSelected"
@@ -110,13 +129,57 @@
                 :ripple="false"
               ></v-checkbox>
             </td>
-            <td v-for="(header, index) in headers" :key="index">
-              <span v-if="header.type === 'text'">
+            <td
+              v-for="(header, index) in headers"
+              :key="index"
+              :style="header.style"
+              style="
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              "
+            >
+              <span
+                v-if="header.type === 'text'"
+                style="white-space: nowrap"
+              >
                 {{ item[header.value] }}
               </span>
               <span v-if="header.type === 'amount'">
                 {{ `${CURRENCY_SYMBOL} ${item[header.value]}` }}
               </span>
+              <v-tooltip
+                v-if="header.type === 'tooltipText'"
+                location="bottom"
+                max-width="230"
+                :text="item[header.value]"
+              >
+                <template v-slot:activator="{ props }">
+                  <span
+                    style="white-space: nowrap"
+                    :style="header.style"
+                    v-bind="props"
+                  >
+                    {{ item[header.value] }}
+                  </span>
+                </template>
+              </v-tooltip>
+              <v-img
+                v-if="header.type === 'image'"
+                :style="header.style"
+                :src="require(`@/assets/items/${item[header.value]}`)"
+              >
+                <template v-slot:placeholder>
+                  <div
+                    class="d-flex align-center justify-center fill-height"
+                  >
+                    <v-progress-circular
+                      color="grey-lighten-4"
+                      indeterminate
+                    ></v-progress-circular>
+                  </div>
+                </template>
+              </v-img>
               <div
                 v-if="header.actions"
                 class="d-flex justify-center"
@@ -129,10 +192,16 @@
                   density="compact"
                   :color="colorScheme.primary"
                   style="border-radius: 8px"
-                  @click="
-                    toggleViewOrders = true;
-                    selectedOrder = item;
-                  "
+                  @click="$emit('toggleViewModal', item)"
+                />
+                <v-btn
+                  v-if="header.actions?.includes('Edit')"
+                  text="Edit"
+                  variant="outlined"
+                  density="compact"
+                  :color="colorScheme.primary"
+                  style="border-radius: 8px"
+                  @click="$emit('edit', item)"
                 />
                 <v-btn
                   v-if="header.actions?.includes('Delete')"
@@ -141,10 +210,7 @@
                   density="compact"
                   color="red"
                   style="border-radius: 8px"
-                  @click="
-                    selectedOrder = item;
-                    toggleConfirmationModal = true;
-                  "
+                  @click="$emit('delete', item)"
                 />
               </div>
               <span
@@ -158,61 +224,14 @@
         </template>
       </v-data-table>
     </v-col>
-
-    <view-orders-modal
-      :openDialog="toggleViewOrders"
-      :items="selectedOrder.items"
-      :orderDetails="selectedOrder"
-      @close="toggleViewOrders = false"
-      @openEditDialog="
-        toggleViewOrders = false;
-        openEditCreateOrderModal = true;
-      "
-    />
-
-    <edit-create-order-modal
-      v-if="openEditCreateOrderModal"
-      :orderPayload="selectedOrder"
-      :openDialog="openEditCreateOrderModal"
-      :is-modal-in-editing-mode="true"
-      @close="
-        openEditCreateOrderModal = false;
-        selectedOrder = {};
-      "
-    />
-
-    <confirmation-modal
-      :open="toggleConfirmationModal"
-      :message="`Confirm you want delete order: (${selectedOrder.id})`"
-      @close="toggleConfirmationModal = false"
-      @confirm="toggleConfirmationModal = false;"
-    >
-      <template v-slot:default>
-        <span class="text-gray-darken-4" style="font-size: 16px">
-          {{ 'Do you want to delete order:' }}
-        </span>
-        <strong
-          :style="{ color: colorScheme.primary, fontSize: '16px' }"
-          >{{ ` (${selectedOrder.id})` }}</strong
-        >
-      </template>
-    </confirmation-modal>
   </v-row>
 </template>
 
 <script>
   import { CURRENCY_SYMBOL } from '@/enums';
-  import ViewOrdersModal from '@/components/orders-components/ViewOrdersModal.vue';
-  import EditCreateOrderModal from '@/components/orders-components/EditCreateOrderModal.vue';
-  import ConfirmationModal from '@/shared/components/ConfirmationModal.vue';
 
   export default {
     name: 'CustomDataTable',
-    components: {
-      ViewOrdersModal,
-      EditCreateOrderModal,
-      ConfirmationModal,
-    },
     props: {
       title: {
         type: String,
@@ -230,6 +249,14 @@
         type: Array,
         default: [],
       },
+      filterConfig: {
+        type: Object,
+        default: {},
+      },
+      filtersWrapperStyle: {
+        type: Object,
+        default: {},
+      },
     },
     data() {
       return {
@@ -237,10 +264,6 @@
         searchText: '',
         itemsLoading: false,
         allItemsSelected: false,
-        toggleViewOrders: false,
-        openEditCreateOrderModal: false,
-        toggleConfirmationModal: false,
-        selectedOrder: {},
         dataTableItems: [],
       };
     },
@@ -265,6 +288,7 @@
 
         return this.dataTableItems;
       },
+      filteredItemsOnCategory() {},
     },
     methods: {
       selectAllItems() {
