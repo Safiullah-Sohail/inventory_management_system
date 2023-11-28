@@ -88,12 +88,14 @@
       </div>
     </v-card-text>
     <v-card-actions class="pt-0 justify-center">
+      {{ isLoading }}
       <v-btn
         class="py-6 d-flex align-center"
         variant="flat"
         width="140px"
         style="border-radius: 12px"
         :color="colorScheme.primary"
+        :loading="isLoading"
         @click="onLogin"
       >
         Login
@@ -116,6 +118,7 @@
       email: '',
       password: '',
       showPassword: false,
+      isLoading: false,
       rules: {
         email: [
           (v) => !!v || 'E-mail is required',
@@ -145,16 +148,22 @@
           }
         });
 
+        if (!this.validForm) return;
+
         try {
+          this.isLoading = true;
           await this.login({
             email: this.email,
             password: this.password,
           });
+          this.isLoading = false;
           this.$toast.success('Login Successfully!!');
           this.$router.push({ name: 'dashboard' });
         } catch (err) {
-          if (err.response?.data?.error)
+          if (err.response?.data?.error) {
             this.$toast.error(err.response?.data?.error);
+          }
+          this.isLoading = false;
         }
       },
     },
