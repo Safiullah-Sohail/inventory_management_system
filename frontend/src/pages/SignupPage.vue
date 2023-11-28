@@ -179,6 +179,7 @@
         width="140px"
         style="border-radius: 12px;"
         :color="colorScheme.primary"
+        :loading="isLoading"
         @click="onSignUp"
       >
         SignUp
@@ -198,6 +199,7 @@ export default {
   data: () => ({
     ValidationRegex,
     validForm: false,
+    isLoading: false,
     errorMessage: '',
     userPayload: {
       firstName: '',
@@ -253,14 +255,17 @@ export default {
       if (!this.validForm) return;
       
       try {
+        this.isLoading = true;
         await this.signUp(this.userPayload);
-        this.$router.push({name: 'dashboard'});
+        this.isLoading = false;
         this.$toast.success('User Login Successfully!')
+        this.$router.push({name: 'dashboard'});
       } catch (err) {
         const message = err.response?.data?.error?.error || err.response?.data?.error;
         if (message) {
           this.$toast.error(message);
         }
+        this.isLoading = false;
       }
     },
   },
