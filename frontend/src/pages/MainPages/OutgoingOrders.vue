@@ -10,7 +10,7 @@
         :color="colorScheme.primary"
         style="border-radius: 12px"
         prepend-icon="mdi-plus"
-        @click="toggleCreateDialog = true"
+        @click="toggleEditCreateDialog = true"
       >
         {{ 'Create a New Order' }}
       </v-btn>
@@ -23,32 +23,69 @@
           :headers="headers"
           :items="AllOrders"
           :search-fields="['name', 'location']"
+          :filter-config="{ type: 'date' }"
+          @toggleViewModal="openViewModal"
+          @delete="onDeleteOrder"
         />
       </custom-card>
     </v-col>
 
+    <view-orders-modal
+      v-if="toggleViewOrders"
+      :openDialog="toggleViewOrders"
+      :items="selectedOrderOnAction.items"
+      :orderDetails="selectedOrderOnAction"
+      @close="toggleViewOrders = false"
+      @openEditDialog="closeViewAndOpenEditModal"
+    />
+
     <edit-create-order-modal
-      :orderPayload="orderPayload"
-      :openDialog="toggleCreateDialog"
+      v-if="toggleEditCreateDialog"
+      :orderPayload="selectedOrderOnAction"
+      :openDialog="toggleEditCreateDialog"
+      :is-modal-in-editing-mode="true"
       @close="
-        toggleCreateDialog = false;
-        orderPayload = {};
+        toggleEditCreateDialog = false;
+        isModalInEditingMode = false;
+        selectedOrderOnAction = {};
       "
     />
+
+    <confirmation-modal
+      v-if="toggleConfirmationModal"
+      :open="toggleConfirmationModal"
+      :message="`Confirm you want delete order: (${selectedOrderOnAction.id})`"
+      @close="toggleConfirmationModal = false"
+      @confirm="toggleConfirmationModal = false"
+    >
+      <template v-slot:default>
+        <span class="text-gray-darken-4" style="font-size: 16px">
+          {{ 'Do you want to delete order:' }}
+        </span>
+        <strong
+          :style="{ color: colorScheme.primary, fontSize: '16px' }"
+          >{{ ` (${selectedOrderOnAction.id})` }}</strong
+        >
+      </template>
+    </confirmation-modal>
   </v-row>
 </template>
 
 <script>
   import CustomCard from '@/shared/components/CustomCard.vue';
+  import ViewOrdersModal from '@/components/orders-components/ViewOrdersModal.vue';
   import DataTableWrapper from '@/shared/components/DataTableWrapper.vue';
+  import ConfirmationModal from '@/shared/components/ConfirmationModal.vue';
   import EditCreateOrderModal from '@/components/orders-components/EditCreateOrderModal.vue';
 
   export default {
     name: 'SalesAndOrderPage',
     components: {
       CustomCard,
+      ConfirmationModal,
       DataTableWrapper,
       EditCreateOrderModal,
+      ViewOrdersModal,
     },
     data() {
       return {
@@ -152,10 +189,11 @@
             items: [],
           },
         ],
-        toggleCreateDialog: false,
-        orderPayload: {
-          itemsSelected: [],
-        },
+        toggleEditCreateDialog: false,
+        toggleViewOrders: false,
+        toggleConfirmationModal: false,
+        isModalInEditingMode: false,
+        selectedOrderOnAction: {},
       };
     },
     computed: {
@@ -166,7 +204,21 @@
         }));
       },
     },
-    methods: {},
+    methods: {
+      closeViewAndOpenEditModal() {
+        this.toggleViewOrders = false;
+        this.toggleEditCreateDialog = true;
+        this.isModalInEditingMode = true;
+      },
+      onDeleteOrder(selectedOrder) {
+        this.selectedOrderOnAction = selectedOrder;
+        this.toggleConfirmationModal = true;
+      },
+      openViewModal(selectedOrder) {
+        this.selectedOrderOnAction = selectedOrder;
+        this.toggleViewOrders = true;
+      },
+    },
   };
 </script>
 

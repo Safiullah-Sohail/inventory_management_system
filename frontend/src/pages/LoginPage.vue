@@ -88,7 +88,6 @@
       </div>
     </v-card-text>
     <v-card-actions class="pt-0 justify-center">
-      {{ isLoading }}
       <v-btn
         class="py-6 d-flex align-center"
         variant="flat"
