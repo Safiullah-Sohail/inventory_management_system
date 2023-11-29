@@ -1,5 +1,5 @@
 {
-  "name": "bookee",
+  "name": "backend",
   "version": "0.1.0",
   "description": "app for pick and drop",
   "main": "./app/index.js",

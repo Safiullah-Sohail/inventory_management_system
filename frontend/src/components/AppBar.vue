@@ -204,6 +204,7 @@
 
           if (tab.href) {
             this.$router.push(tab.href);
+            localStorage.setItem('current-tab-index', newValue[0]);
           }
           // Only Logout Tab is only tab without any href value
           else {
@@ -243,6 +244,10 @@
         this.$router.push({ name: 'login' });
         this.$toast.success('Logout Successfully!!');
       },
+    },
+    mounted() {
+      const index = localStorage.getItem('current-tab-index');
+      this.selectedTabs = [+index];
     },
   };
 </script>
