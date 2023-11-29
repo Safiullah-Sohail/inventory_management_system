@@ -72,7 +72,7 @@
         :loading-text="`Loading...!!`"
         :no-data-text="`No ${title} Found...!!`"
         item-key="name"
-        items-per-page="6"
+        items-per-page="10"
         show-select
         class="custom-datatable"
         hover
@@ -264,7 +264,6 @@
         searchText: '',
         itemsLoading: false,
         allItemsSelected: false,
-        dataTableItems: [],
       };
     },
     computed: {
@@ -288,7 +287,9 @@
 
         return this.dataTableItems;
       },
-      filteredItemsOnCategory() {},
+      dataTableItems() {
+        return this.items;
+      },
     },
     methods: {
       selectAllItems() {
@@ -296,9 +297,6 @@
           item.isSelected = !this.allItemsSelected;
         });
       },
-    },
-    mounted() {
-      this.dataTableItems = this.items;
     },
   };
 </script>

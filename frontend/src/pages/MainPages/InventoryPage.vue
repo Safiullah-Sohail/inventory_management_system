@@ -18,6 +18,12 @@
 
     <v-col cols="12">
       <custom-card>
+        <div class="d-flex justify-end mb-2">
+          <h5 style="color: #5570f1; text-decoration: underline; cursor: pointer;">
+            {{ 'View Inventory History' }}
+          </h5>
+        </div>
+
         <data-table-wrapper
           title="Inventory"
           :headers="headers"
